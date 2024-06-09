@@ -1,0 +1,80 @@
+- hosts: web
+  become: yes
+  tasks:
+    - name: Create ansible-worker user
+      user:
+        name: ansible-worker
+        shell: /bin/bash
+        state: present
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Copy SSH private key
+      copy:
+        src: ssh_keys/id_rsa
+        dest: /home/ansible-worker/.ssh/id_rsa
+        owner: ansible-worker
+        group: ansible-worker
+        mode: '0600'
+
+    - name: Copy SSH public key
+      copy:
+        src: ssh_keys/id_rsa.pub
+        dest: /home/ansible-worker/.ssh/id_rsa.pub
+        owner: ansible-worker
+        group: ansible-worker
+        mode: '0644'
+    
+    - name: Create directory for repo
+      file:
+        path: /home/ansible-worker/www
+        state: directory
+        owner: ansible-worker
+        group: ansible-worker
+        mode: '0755'
+
+    - name: Clone repo
+      git:
+        repo: https://github.com/iphilka/stud-template
+        dest: /home/ansible-worker/www
+        version: master
+        key_file: /home/ansible-worker/.ssh/id_rsa
+
+    - name: Create index.html from template
+      template:
+        src: templates/index.html.j2
+        dest: /home/ansible-worker/www/stud-template/index.html
+        owner: ansible-worker
+        group: ansible-worker
+        mode: '0644'
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Configure Nginx
+      copy:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/sites-available/ansible.iphilka.ru.conf
+
+    - name: Create symlink for Nginx config
+      file:
+        src: /etc/nginx/sites-available/ansible.iphilka.ru.conf
+        dest: /etc/nginx/sites-enabled/ansible.iphilka.ru.conf
+        state: link
+
+    - name: Remove default Nginx config
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
