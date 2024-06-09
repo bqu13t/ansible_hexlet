@@ -66,6 +66,12 @@
         group: ansible-worker
         mode: '0644'
 
+    - name: Change ownership of index.html
+      file:
+        path: /home/ansible-worker/www/stud-template/index.html
+        owner: www-data
+        group: www-data
+
     - name: Install Nginx
       apt:
         name: nginx
@@ -96,23 +102,7 @@
         group: www-data
         mode: '0755'
         recurse: yes
-
-    - name: permissions for /home/ansible-worker/www/stud-template
-      file:
-        path: /home/ansible-worker/www/stud-template
-        state: directory
-        owner: www-data
-        group: www-data
-        mode: '0755'
-        recurse: yes
-    
-    - name: permissions for /home/ansible-worker/www/stud-template/index.html
-      file:
-        path: /home/ansible-worker/www/stud-template/index.html
-        state: file
-        owner: www-data
-        group: www-data
-        mode: '0644'
+  
 
     - name: Restart Nginx
       service:
