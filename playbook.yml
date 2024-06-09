@@ -28,6 +28,12 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0644'
+
+    - name: Remove existing www directory if it exists
+      file:
+        path: /home/ansible-worker/www
+        state: absent
+        force: yes
     
     - name: Create directory for repo
       file:
