@@ -51,14 +51,6 @@
         group: ansible-worker
         mode: '0755'
 
-    - name: Set permissions for www-data user
-      file:
-        path: /home/ansible-worker/www/stud-template
-        owner: www-data
-        group: www-data
-        mode: '0755'
-        recurse: yes
-
     - name: Clone repo
       git:
         repo: https://github.com/iphilka/stud-template
@@ -73,6 +65,14 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0644'
+
+    - name: Set permissions for www-data user
+      file:
+        path: /home/ansible-worker/www/
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        recurse: yes
 
     - name: Change ownership of index.html
       file:
