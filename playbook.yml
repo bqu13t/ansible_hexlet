@@ -35,9 +35,17 @@
         state: absent
         force: yes
     
-    - name: Create directory for repo
+    - name: Create www directory for repo
       file:
         path: /home/ansible-worker/www
+        state: directory
+        owner: ansible-worker
+        group: ansible-worker
+        mode: '0755'
+
+    - name: Create stud-template directory
+      file:
+        path: /home/ansible-worker/www/stud-template
         state: directory
         owner: ansible-worker
         group: ansible-worker
