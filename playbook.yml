@@ -64,7 +64,7 @@
         dest: /home/ansible-worker/www/stud-template/index.html
         owner: ansible-worker
         group: ansible-worker
-        mode: '0755'
+        mode: '0644'
 
     - name: Change ownership of index.html
       file:
