@@ -102,8 +102,12 @@
         group: www-data
         mode: '0755'
         recurse: yes
-  
 
+    - name: Change permissions of index.html
+      file:
+        path: /home/ansible-worker/www/stud-template/index.html
+        mode: '0755'
+  
     - name: Restart Nginx
       service:
         name: nginx
