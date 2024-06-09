@@ -7,9 +7,11 @@
         shell: /bin/bash
         state: present
 
-    - name: Install Git
+    - name: Install required packages
       apt:
-        name: git
+        name:
+          - git
+          - nginx
         state: present
         update_cache: yes
 
@@ -58,6 +60,9 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0755'
+
+    - name: Add exception for dubious ownership in Git repository
+      command: git config --global --add safe.directory /home/ansible-worker/www/stud-template
 
     - name: Clone repo
       git:
