@@ -13,6 +13,14 @@
         state: present
         update_cache: yes
 
+    - name: Create .ssh directory for ansible-worker
+      file:
+        path: /home/ansible-worker/.ssh
+        state: directory
+        owner: ansible-worker
+        group: ansible-worker
+        mode: '0755'
+
     - name: Copy SSH private key
       copy:
         src: ssh_keys/id_rsa
