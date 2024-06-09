@@ -54,7 +54,7 @@
     - name: Clone repo
       git:
         repo: https://github.com/iphilka/stud-template
-        dest: /home/ansible-worker/www
+        dest: /home/ansible-worker/www/stud-template
         version: main
         key_file: /home/ansible-worker/.ssh/id_rsa
 
