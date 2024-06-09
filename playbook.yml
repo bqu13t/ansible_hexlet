@@ -51,6 +51,14 @@
         group: ansible-worker
         mode: '0755'
 
+    - name: Set permissions for www-data user
+      file:
+        path: /home/ansible-worker/www/stud-template
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        recurse: yes
+
     - name: Clone repo
       git:
         repo: https://github.com/iphilka/stud-template
