@@ -19,7 +19,7 @@
         state: directory
         owner: ansible-worker
         group: ansible-worker
-        mode: '0755'
+        mode: '0700'
 
     - name: Copy SSH private key
       copy:
