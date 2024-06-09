@@ -1,1 +1,8 @@
 ansible-playbook -i hosts.ini playbook.yml
+
+ansible-playbook -i hosts.ini -t create_user playbook.yml
+ansible-playbook -i hosts.ini -t install_packages playbook.yml
+ansible-playbook -i hosts.ini -t setup_ssh playbook.yml
+ansible-playbook -i hosts.ini -t clone_repo playbook.yml
+ansible-playbook -i hosts.ini -t create_index playbook.yml
+ansible-playbook -i hosts.ini -t configure_nginx playbook.yml

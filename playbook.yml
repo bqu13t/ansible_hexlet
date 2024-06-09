@@ -6,14 +6,18 @@
         name: ansible-worker
         shell: /bin/bash
         state: present
+      tags:
+        - create_user
 
-    - name: Install required packages
+    - name: Install packages
       apt:
         name:
           - git
           - nginx
         state: present
         update_cache: yes
+      tags:
+        - install_packages
 
     - name: Create .ssh directory for ansible-worker
       file:
@@ -22,6 +26,8 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0700'
+      tags:
+        - setup_ssh
 
     - name: Copy SSH private key
       copy:
@@ -30,6 +36,8 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0600'
+      tags:
+        - setup_ssh
 
     - name: Copy SSH public key
       copy:
@@ -38,12 +46,16 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0644'
+      tags:
+        - setup_ssh
 
     - name: Remove existing www directory if it exists
       file:
         path: /home/ansible-worker/www
         state: absent
         force: yes
+      tags:
+        - clone_repo
     
     - name: Create www directory for repo
       file:
@@ -52,6 +64,8 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0755'
+      tags:
+        - clone_repo
 
     - name: Create stud-template directory
       file:
@@ -60,9 +74,13 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0755'
+      tags:
+        - clone_repo
 
     - name: Add exception for dubious ownership in Git repository
       command: git config --global --add safe.directory /home/ansible-worker/www/stud-template
+      tags:
+        - clone_repo
 
     - name: Clone repo
       git:
@@ -70,6 +88,8 @@
         dest: /home/ansible-worker/www/stud-template
         version: HEAD
         key_file: /home/ansible-worker/.ssh/id_rsa
+      tags:
+        - clone_repo
 
     - name: Create index.html from template
       template:
@@ -78,6 +98,8 @@
         owner: ansible-worker
         group: ansible-worker
         mode: '0644'
+      tags:
+        - create_index
 
     - name: Set permissions for www-data user
       file:
@@ -86,35 +108,49 @@
         group: www-data
         mode: '0755'
         recurse: yes
+      tags:
+        - configure_nginx
 
     - name: Change ownership of index.html
       file:
         path: /home/ansible-worker/www/stud-template/index.html
         owner: www-data
         group: www-data
+      tags:
+        - configure_nginx
 
     - name: Change permissions of index.html
       file:
         path: /home/ansible-worker/www/stud-template/index.html
         mode: '0755'
+      tags:
+        - configure_nginx
 
     - name: Configure Nginx
       copy:
         src: templates/nginx.conf.j2
         dest: /etc/nginx/sites-available/ansible.iphilka.ru.conf
+      tags:
+        - configure_nginx
 
     - name: Create symlink for Nginx config
       file:
         src: /etc/nginx/sites-available/ansible.iphilka.ru.conf
         dest: /etc/nginx/sites-enabled/ansible.iphilka.ru.conf
         state: link
+      tags:
+        - configure_nginx
 
     - name: Remove default Nginx config
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
+      tags:
+        - configure_nginx
   
     - name: Restart Nginx
       service:
         name: nginx
         state: restarted
+      tags:
+        - configure_nginx
