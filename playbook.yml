@@ -64,7 +64,7 @@
         dest: /home/ansible-worker/www/stud-template/index.html
         owner: ansible-worker
         group: ansible-worker
-        mode: '0644'
+        mode: '0755'
 
     - name: Change ownership of index.html
       file:
@@ -93,20 +93,6 @@
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
-    
-    - name: Ensure permissions for /home/ansible-worker/www
-      file:
-        path: /home/ansible-worker/www
-        state: directory
-        owner: www-data
-        group: www-data
-        mode: '0755'
-        recurse: yes
-
-    - name: Change permissions of index.html
-      file:
-        path: /home/ansible-worker/www/stud-template/index.html
-        mode: '0755'
   
     - name: Restart Nginx
       service:
