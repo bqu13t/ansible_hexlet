@@ -68,7 +68,7 @@
 
     - name: Set permissions for www-data user
       file:
-        path: /home/ansible-worker/www/
+        path: /
         owner: www-data
         group: www-data
         mode: '0755'
