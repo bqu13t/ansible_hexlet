@@ -87,6 +87,15 @@
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
+    
+    - name: Ensure permissions for /home/ansible-worker/www
+      file:
+        path: /home/ansible-worker/www
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        recurse: yes
 
     - name: Restart Nginx
       service:
